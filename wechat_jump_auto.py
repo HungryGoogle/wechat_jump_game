@@ -35,7 +35,7 @@ except Exception as ex:
 VERSION = "1.1.2"
 
 # DEBUG 开关，需要调试的时候请改为 True，不需要调试的时候为 False
-DEBUG_SWITCH = False
+DEBUG_SWITCH = True
 
 
 # Magic Number，不设置可能无法正常执行，请根据具体截图从上到下按需
@@ -217,31 +217,35 @@ def main():
     debug.dump_device_info()
     screenshot.check_screenshot()
 
-    i, next_rest, next_rest_time = (0, random.randrange(3, 10),
+    curJumpIndex, next_rest, next_rest_time = (0, random.randrange(3, 10),
                                     random.randrange(5, 10))
     while True:
         screenshot.pull_screenshot()
         im = Image.open('./autojump.png')
-        # 获取棋子和 board 的位置
+
+        # 获取棋子位置（piece_x, piece_y）和 board 的位置（board_x, board_y）
         piece_x, piece_y, board_x, board_y = find_piece_and_board(im)
-        ts = int(time.time())
-        print(ts, piece_x, piece_y, board_x, board_y)
+
+        # 获取当前时间作为debug备份的图片文件名,用于错误调试
+        curTime = int(time.time())
+        print(curTime, piece_x, piece_y, board_x, board_y)
         set_button_position(im)
         jump(math.sqrt((board_x - piece_x) ** 2 + (board_y - piece_y) ** 2))
         if DEBUG_SWITCH:
-            debug.save_debug_screenshot(ts, im, piece_x,
+            debug.save_debug_screenshot(curTime, im, piece_x,
                                         piece_y, board_x, board_y)
-            debug.backup_screenshot(ts)
+            debug.backup_screenshot(curTime)
         im.close()
-        i += 1
-        if i == next_rest:
-            print('已经连续打了 {} 下，休息 {}s'.format(i, next_rest_time))
+
+        curJumpIndex += 1
+        if curJumpIndex == next_rest:
+            print('已经连续打了 {} 下，休息 {}s'.format(curJumpIndex, next_rest_time))
             for j in range(next_rest_time):
                 sys.stdout.write('\r程序将在 {}s 后继续'.format(next_rest_time - j))
                 sys.stdout.flush()
                 time.sleep(1)
             print('\n继续')
-            i, next_rest, next_rest_time = (0, random.randrange(30, 100),
+            curJumpIndex, next_rest, next_rest_time = (0, random.randrange(30, 100),
                                             random.randrange(10, 60))
         # 为了保证截图的时候应落稳了，多延迟一会儿，随机值防 ban
         time.sleep(random.uniform(0.9, 1.2))

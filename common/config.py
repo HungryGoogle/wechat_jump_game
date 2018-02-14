@@ -17,14 +17,15 @@ def open_accordant_config():
         path=sys.path[0],
         screen_size=screen_size
     )
+
     if os.path.exists(config_file):
-        with open(config_file, 'r') as f:
+        with open(config_file, 'r') as file:
             print("Load config file from {}".format(config_file))
-            return json.load(f)
+            return json.load(file)
     else:
-        with open('{}/config/default.json'.format(sys.path[0]), 'r') as f:
+        with open('{}/config/default.json'.format(sys.path[0]), 'r') as file:
             print("Load default config")
-            return json.load(f)
+            return json.load(file)
 
 
 def _get_screen_size():

@@ -38,12 +38,15 @@ def main():
     """
     主函数
     """
-    op = yes_or_no('请确保手机打开了 ADB 并连接了电脑，'
-                   '然后打开跳一跳并【开始游戏】后再用本程序，确定开始？')
-    if not op:
-        print('bye')
-        return
+    # op = yes_or_no('请确保手机打开了 ADB 并连接了电脑，'
+    #                '然后打开跳一跳并【开始游戏】后再用本程序，确定开始？')
+    # if not op:
+    #     print('bye')
+    #     return
     print('程序版本号：{}'.format(VERSION))
+
+
+
     debug.dump_device_info()
     screenshot.check_screenshot()
 
@@ -52,7 +55,7 @@ def main():
 
 
 screenshot.pull_screenshot()
-im = Image.open('./autojump.png')
+# im = Image.open('./autojump.png')
 
 if __name__ == '__main__':
     main()
